@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:newpro/data/db_config.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:pedometer/pedometer.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data/List.dart';
+
+
 
 class MyHome extends StatelessWidget {
   final AdaptiveThemeMode? savedThemeMode;
@@ -24,8 +29,12 @@ class MyHome extends StatelessWidget {
       dark: ThemeData.dark(),
       initial: savedThemeMode ?? AdaptiveThemeMode.light,
       builder: (theme, darkTheme) => MaterialApp(
+
         debugShowCheckedModeBanner: false,
-        title: 'Adaptive Theme Demo',
+        title: 'Flutter Demo',
+
+
+
         theme: theme,
         darkTheme: darkTheme,
         home: MyHomePage(onChanged: onChanged),
@@ -45,6 +54,8 @@ class MyHomePage extends StatefulWidget {
 }
 bool mode=true;
 class _MyHomePageState extends State<MyHomePage> {
+
+
 
   late Stream<StepCount> _stepCountStream;
   late Stream<PedestrianStatus> _pedestrianStatusStream;
@@ -101,14 +112,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (!mounted) return;
   }
- @override
+  @override
   Widget build(BuildContext context) {
     double x=0;
-
-   setState(() {
+    int k=0;
+    setState(() {
       x = (h / 100) as double;
 
-   });
+    });
 
     return AnimatedTheme(
       duration: const Duration(milliseconds: 300),
@@ -116,59 +127,75 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Scaffold(
         appBar: AppBar(
 
-        title: const Icon(Icons.directions_walk),
-        leading:
+          title: const Icon(Icons.directions_walk),
+          leading:
 
-        IconButton(icon: Icon(Icons.save_alt_rounded), onPressed: () async {
-          SharedPreferences preferences=await SharedPreferences.getInstance();
-          var  username=   preferences.getString("name");
-          print(username);
+          IconButton(icon: Icon(Icons.arrow_circle_down_sharp), onPressed: () async {
 
-          db_config.add(x.toString(), username.toString());
-          Fluttertoast.showToast(msg:"Saved",
+            //SharedPreferences preferences=await SharedPreferences.getInstance();
+            var  username=  'pppp';
+            print(username);
 
-              toastLength:
-              Toast.LENGTH_SHORT,
-              //gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
+            db_config.add(x.toString(), username.toString());
+            Fluttertoast.showToast(msg:"Saved",
 
-              backgroundColor: Colors.white,
-              textColor: Colors.deepOrange,
+                toastLength:
+                Toast.LENGTH_SHORT,
+                //gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
 
-              fontSize: 16.0
-          );
+                backgroundColor: Colors.white,
+                textColor: Colors.deepOrange,
 
-        },),
-        actions: [
-          Row(
-            children: [
+                fontSize: 16.0
+            );
 
-
-              IconButton(icon: Icon(Icons.filter_list_rounded),
-                onPressed: () => {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>
-                List_Data ()))
-
-              }
-              ),
-             Switch(value: mode, onChanged: (state){
-                setState(() {
-                  mode=state;
-                  mode?AdaptiveTheme.of(context).setLight():AdaptiveTheme.of(context).setDark();
+          },),
+          actions: [
+            Row(
+              children: [
 
 
-                });
-              })
-            ],
-          )
-        ],        ),
+                IconButton(icon: Icon(Icons.filter_list_rounded),
+                    onPressed: () => {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>
+                          List_Data ()))
+
+                    }
+                ),
+
+
+
+
+
+
+
+                IconButton(icon: Icon(Icons.filter_list_rounded),
+                    onPressed: () => {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>
+                          List_Data ()))
+
+                    }
+                ),
+                Switch(value: mode, onChanged: (state){
+                  setState(() {
+                    mode=state;
+                    mode?AdaptiveTheme.of(context).setLight():AdaptiveTheme.of(context).setDark();
+
+
+                  });
+                })
+              ],
+            )
+          ],        ),
 
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                'Steps taken:',
+                'Step Token',
+                //        "p",
                 style: TextStyle(fontSize: 30),
               ),
               Text(
@@ -180,19 +207,36 @@ class _MyHomePageState extends State<MyHomePage> {
                 thickness: 0,
                 color: Colors.white,
               ),
-              Text(
-                'Health Points:',
-                style: TextStyle(fontSize: 30),
-              ),
-              Text(
-                x.toString(),
-                style: TextStyle(fontSize: 60),
-              ),
+              // Text(
+              //   'Health Points:',
+              //   style: TextStyle(fontSize: 30),
+              // ),
+              // Text(
+              //   x.toString(),
+              //   style: TextStyle(fontSize: 60),
+              // ),
+
               Divider(
                 height: 30,
                 thickness: 0,
                 color: Colors.white,
               ),
+              Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child:
+                  CircularPercentIndicator(
+                    animation: true,
+                    animationDuration: 1000,
+                    restartAnimation: true,
+                    radius: 145.0,
+                    lineWidth: 20.0,
+                    percent: x     ,
+                    reverse: true,
+                    animateFromLastPercent: true,
+                    circularStrokeCap: CircularStrokeCap.round,
+                    center: new Text("Health Points:"+x.toString()),
+                    progressColor: Colors.deepOrange,
+                  )),
               Text(
                 'Pedestrian status:',
                 style: TextStyle(fontSize: 30),
