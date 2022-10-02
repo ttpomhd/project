@@ -1,0 +1,6 @@
+package com.tpowep.newpro
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity() {
+}
