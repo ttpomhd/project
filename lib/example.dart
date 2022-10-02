@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
 import 'package:newpro/data/db_config.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:pedometer/pedometer.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data/List.dart';
-import 'localization/changelocal.dart';
-import 'localization/translation.dart';
 
 class MyHome extends StatelessWidget {
   final AdaptiveThemeMode? savedThemeMode;
@@ -24,19 +19,13 @@ class MyHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    LocaleController controller = Get.put(LocaleController());
-
     return AdaptiveTheme(
       light: ThemeData.light(),
       dark: ThemeData.dark(),
       initial: savedThemeMode ?? AdaptiveThemeMode.light,
-      builder: (theme, darkTheme) => GetMaterialApp(
-        translations: MyTranslation(),
+      builder: (theme, darkTheme) => MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        locale: controller.language,
-
-
+        title: 'Adaptive Theme Demo',
         theme: theme,
         darkTheme: darkTheme,
         home: MyHomePage(onChanged: onChanged),
@@ -56,7 +45,6 @@ class MyHomePage extends StatefulWidget {
 }
 bool mode=true;
 class _MyHomePageState extends State<MyHomePage> {
-  LocaleController controller = Get.put(LocaleController());
 
   late Stream<StepCount> _stepCountStream;
   late Stream<PedestrianStatus> _pedestrianStatusStream;
@@ -113,14 +101,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (!mounted) return;
   }
-  @override
+ @override
   Widget build(BuildContext context) {
     double x=0;
-    int k=0;
-    setState(() {
+
+   setState(() {
       x = (h / 100) as double;
 
-    });
+   });
 
     return AnimatedTheme(
       duration: const Duration(milliseconds: 300),
@@ -128,81 +116,59 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Scaffold(
         appBar: AppBar(
 
-          title: const Icon(Icons.directions_walk),
-          leading:
+        title: const Icon(Icons.directions_walk),
+        leading:
 
-          IconButton(icon: Icon(Icons.arrow_circle_down_sharp), onPressed: () async {
+        IconButton(icon: Icon(Icons.save_alt_rounded), onPressed: () async {
+          SharedPreferences preferences=await SharedPreferences.getInstance();
+          var  username=   preferences.getString("name");
+          print(username);
 
-            //SharedPreferences preferences=await SharedPreferences.getInstance();
-            var  username=  'pppp';
-            print(username);
+          db_config.add(x.toString(), username.toString());
+          Fluttertoast.showToast(msg:"Saved",
 
-            db_config.add(x.toString(), username.toString());
-            Fluttertoast.showToast(msg:"Saved",
+              toastLength:
+              Toast.LENGTH_SHORT,
+              //gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
 
-                toastLength:
-                Toast.LENGTH_SHORT,
-                //gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
+              backgroundColor: Colors.white,
+              textColor: Colors.deepOrange,
 
-                backgroundColor: Colors.white,
-                textColor: Colors.deepOrange,
+              fontSize: 16.0
+          );
 
-                fontSize: 16.0
-            );
-
-          },),
-          actions: [
-            Row(
-              children: [
-
-
-                IconButton(icon: Icon(Icons.filter_list_rounded),
-                    onPressed: () => {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>
-                          List_Data ()))
-
-                    }
-                ),
+        },),
+        actions: [
+          Row(
+            children: [
 
 
+              IconButton(icon: Icon(Icons.filter_list_rounded),
+                onPressed: () => {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>
+                List_Data ()))
 
-                IconButton(icon: Icon(Icons.link),
-                    onPressed: () => {
-                      controller.changeLang("ar")
-
-                    }
-                ),
-
-
-
-
-                IconButton(icon: Icon(Icons.filter_list_rounded),
-                    onPressed: () => {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>
-                          List_Data ()))
-
-                    }
-                ),
-                Switch(value: mode, onChanged: (state){
-                  setState(() {
-                    mode=state;
-                    mode?AdaptiveTheme.of(context).setLight():AdaptiveTheme.of(context).setDark();
+              }
+              ),
+             Switch(value: mode, onChanged: (state){
+                setState(() {
+                  mode=state;
+                  mode?AdaptiveTheme.of(context).setLight():AdaptiveTheme.of(context).setDark();
 
 
-                  });
-                })
-              ],
-            )
-          ],        ),
+                });
+              })
+            ],
+          )
+        ],        ),
 
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                '0'.tr,
-                //        "p",
+                'Steps taken:',
                 style: TextStyle(fontSize: 30),
               ),
               Text(
@@ -214,38 +180,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 thickness: 0,
                 color: Colors.white,
               ),
-              // Text(
-              //   'Health Points:',
-              //   style: TextStyle(fontSize: 30),
-              // ),
-              // Text(
-              //   x.toString(),
-              //   style: TextStyle(fontSize: 60),
-              // ),
-
+              Text(
+                'Health Points:',
+                style: TextStyle(fontSize: 30),
+              ),
+              Text(
+                x.toString(),
+                style: TextStyle(fontSize: 60),
+              ),
               Divider(
                 height: 30,
                 thickness: 0,
                 color: Colors.white,
               ),
-              Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child:
-                  CircularPercentIndicator(
-                    c
-                    animation: true,
-                    animationDuration: 1000,
-                    restartAnimation: true,
-                    radius: 145.0,
-                    lineWidth: 40.0,
-                    percent: x     ,
-                    animateFromLastPercent: true,
-                    circularStrokeCap: CircularStrokeCap.round,
-                    center: new Text("Health Points:"+x.toString()),
-                    progressColor: Colors.deepOrange,
-                  )),
-
-
               Text(
                 'Pedestrian status:',
                 style: TextStyle(fontSize: 30),
