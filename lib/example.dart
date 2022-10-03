@@ -243,7 +243,7 @@ double z=0.0;
 
                     radius: 100.0,
                     lineWidth: 20.0,
-                    percent: x    ,
+                    percent: z    ,
                     reverse: true,
                     animateFromLastPercent: true,
                     circularStrokeCap: CircularStrokeCap.round,
@@ -252,17 +252,7 @@ double z=0.0;
                     ),
                     progressColor: Colors.deepOrange,
                   )),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: MaterialButton(onPressed: (){
-                  setState(() {
-                    z=z+0.1/50;
 
-                  });
-                },
-                  child: Text("data"),
-                ),
-              ),
               Text(
                 'Pedestrian status:',
                 style: TextStyle(fontSize: 30),
