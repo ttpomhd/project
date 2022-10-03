@@ -65,7 +65,8 @@ double z=0.0;
   @override
   void initState() {
     super.initState();
-
+    z=10/100;
+    z=z+0.1;
 
     initPlatformState();
   }
@@ -75,7 +76,7 @@ double z=0.0;
     setState(() {
       _steps = event.steps.toString();
       Health_Points=int.parse(event.steps.toString());
-      z=z+0.1;
+      z=z+0.01;
     });
   }
 
@@ -118,7 +119,7 @@ double z=0.0;
     int k=0;
     setState(() {
       x = (Health_Points / 100) as double;
-      z=z+0.1;
+      z=z+0.1/50;
     });
 
     return AnimatedTheme(
@@ -183,7 +184,9 @@ double z=0.0;
                   padding: const EdgeInsets.all(8.0),
                   child:
                   LinearPercentIndicator(
+
                     animation: true,
+
 
                     lineHeight: 40,
                     animationDuration: 1000,
@@ -230,7 +233,7 @@ double z=0.0;
                       });
                     },
 
-                    radius: 145.0,
+                    radius: 100.0,
                     lineWidth: 20.0,
                     percent: z    ,
                     reverse: true,
@@ -243,7 +246,7 @@ double z=0.0;
                 padding: const EdgeInsets.all(8.0),
                 child: MaterialButton(onPressed: (){
                   setState(() {
-                    z=z+0.1/100;
+                    z=z+0.1/50;
 
                   });
                 },
@@ -260,13 +263,13 @@ double z=0.0;
                     : _status == 'stopped'
                     ? Icons.accessibility_new
                     : Icons.error,
-                size: 100,
+                size: 75,
               ),
               Center(
                 child: Text(
                   _status,
                   style: _status == 'walking' || _status == 'stopped'
-                      ? TextStyle(fontSize: 30)
+                      ? TextStyle(fontSize: 20)
                       : TextStyle(fontSize: 20, color: Colors.red),
                 ),
               )
