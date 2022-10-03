@@ -11,13 +11,16 @@ import 'package:newpro/data/List.dart';
 import 'package:newpro/data/db_config.dart';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 //bool light=true;
 String formatDate(DateTime d) {
   return d.toString().substring(0, 19);
 }
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   final savedThemeMode = await AdaptiveTheme.getThemeMode();
   runApp(MyApp(savedThemeMode: savedThemeMode));
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 
 import 'package:newpro/data/db_config.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:newpro/data/myLocal.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -24,11 +26,14 @@ class MyHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(myLocalCtr());
     return AdaptiveTheme(
       light: ThemeData.light(),
       dark: ThemeData.dark(),
       initial: savedThemeMode ?? AdaptiveThemeMode.light,
       builder: (theme, darkTheme) => MaterialApp(
+
+
 
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
@@ -115,6 +120,7 @@ double z=0.0;
   }
   @override
   Widget build(BuildContext context) {
+    myLocalCtr mylocal=Get.find();
     double x=0;
     int k=0;
     setState(() {
@@ -162,6 +168,8 @@ double z=0.0;
 
                     }
                 ),
+
+
                 Switch(value: mode, onChanged: (state){
                   setState(() {
                     mode=state;
@@ -202,7 +210,7 @@ double z=0.0;
 
                     animateFromLastPercent: true,
 
-                    center: new Text("Step:"+_steps.toString()),
+                    center: new Text("Step "+_steps.toString()),
                     progressColor: Colors.yellow,
                   )),
               // Text(
@@ -235,11 +243,13 @@ double z=0.0;
 
                     radius: 100.0,
                     lineWidth: 20.0,
-                    percent: z    ,
+                    percent: x    ,
                     reverse: true,
                     animateFromLastPercent: true,
                     circularStrokeCap: CircularStrokeCap.round,
-                    center: new Text("Health Points:"+Health_Points.toString()),
+                    center: new Text("Health Points  "+x.toString(),
+                    style: TextStyle(fontSize: 15),
+                    ),
                     progressColor: Colors.deepOrange,
                   )),
               Padding(
