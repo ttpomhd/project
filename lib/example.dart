@@ -60,9 +60,8 @@ class _MyHomePageState extends State<MyHomePage> {
   late Stream<StepCount> _stepCountStream;
   late Stream<PedestrianStatus> _pedestrianStatusStream;
   String _status = '?', _steps = '?' ;
-
-
-  int h=0;
+double z=0.0;
+  int Health_Points=0;
   @override
   void initState() {
     super.initState();
@@ -75,7 +74,8 @@ class _MyHomePageState extends State<MyHomePage> {
     print(event);
     setState(() {
       _steps = event.steps.toString();
-      h=int.parse(event.steps.toString());
+      Health_Points=int.parse(event.steps.toString());
+      z=z+0.1;
     });
   }
 
@@ -117,8 +117,8 @@ class _MyHomePageState extends State<MyHomePage> {
     double x=0;
     int k=0;
     setState(() {
-      x = (h / 100) as double;
-
+      x = (Health_Points / 100) as double;
+      z=z+0.1;
     });
 
     return AnimatedTheme(
@@ -132,8 +132,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
           IconButton(icon: Icon(Icons.arrow_circle_down_sharp), onPressed: () async {
 
-            //SharedPreferences preferences=await SharedPreferences.getInstance();
-            var  username=  'pppp';
+            SharedPreferences preferences=await SharedPreferences.getInstance();
+          var username=preferences.get("name");
             print(username);
 
             db_config.add(x.toString(), username.toString());
@@ -154,22 +154,6 @@ class _MyHomePageState extends State<MyHomePage> {
           actions: [
             Row(
               children: [
-
-
-                IconButton(icon: Icon(Icons.filter_list_rounded),
-                    onPressed: () => {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>
-                          List_Data ()))
-
-                    }
-                ),
-
-
-
-
-
-
-
                 IconButton(icon: Icon(Icons.filter_list_rounded),
                     onPressed: () => {
                       Navigator.of(context).push(MaterialPageRoute(builder: (context)=>
@@ -193,28 +177,40 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(
-                'Step Token',
-                //        "p",
-                style: TextStyle(fontSize: 30),
-              ),
-              Text(
-                _steps,
-                style: TextStyle(fontSize: 60),
-              ),
+
+
+              Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child:
+                  LinearPercentIndicator(
+                    animation: true,
+
+                    lineHeight: 40,
+                    animationDuration: 1000,
+                    restartAnimation: true,
+                    onAnimationEnd: (){
+                      setState(() {
+                        z=0.0;
+                      });
+                    },
+
+
+                    percent: z     ,
+
+                    animateFromLastPercent: true,
+
+                    center: new Text("Step:"+_steps.toString()),
+                    progressColor: Colors.yellow,
+                  )),
+              // Text(
+              //   _steps,
+              //   style: TextStyle(fontSize: 60),
+              // ),
               Divider(
                 height: 10,
                 thickness: 0,
                 color: Colors.white,
               ),
-              // Text(
-              //   'Health Points:',
-              //   style: TextStyle(fontSize: 30),
-              // ),
-              // Text(
-              //   x.toString(),
-              //   style: TextStyle(fontSize: 60),
-              // ),
 
               Divider(
                 height: 30,
@@ -228,15 +224,32 @@ class _MyHomePageState extends State<MyHomePage> {
                     animation: true,
                     animationDuration: 1000,
                     restartAnimation: true,
+                    onAnimationEnd: (){
+                      setState(() {
+                        z=0.0;
+                      });
+                    },
+
                     radius: 145.0,
                     lineWidth: 20.0,
-                    percent: x     ,
+                    percent: z    ,
                     reverse: true,
                     animateFromLastPercent: true,
                     circularStrokeCap: CircularStrokeCap.round,
-                    center: new Text("Health Points:"+x.toString()),
+                    center: new Text("Health Points:"+Health_Points.toString()),
                     progressColor: Colors.deepOrange,
                   )),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: MaterialButton(onPressed: (){
+                  setState(() {
+                    z=z+0.1/100;
+
+                  });
+                },
+                  child: Text("data"),
+                ),
+              ),
               Text(
                 'Pedestrian status:',
                 style: TextStyle(fontSize: 30),

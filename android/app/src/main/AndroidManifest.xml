@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tpowep.newpro">
    <application
-        android:label="newpro"
+        android:label="Health Points"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
